@@ -1,5 +1,9 @@
 package com.carrental;
 
+import com.carrental.domain.*;
+import com.carrental.mail.MailSander;
+import com.carrental.validator.*;
+
 public class RentalOrderValidator {
 
     public static void main(String[] args) {
@@ -7,13 +11,36 @@ public class RentalOrderValidator {
     }
     public static void checkAll() {
 
-        CarRentalOrder cao = readCarRentalOrder();
-        AnswerReserved answerReserved = checkReserved(cao);
-        AnswerCarReserved answerCarReserved = checkCarReserved(cao);
-        AnswerDriversLicense answerDriversLicense = checkDriversLicense(cao);
-        AnswerSufficientFunds answerSufficientFunds = checkSufficientFunds(cao);
-        AnswerViolations answerViolations = checkViolations(cao);
-        sendMail(cao);
+        while (true) {
+
+            CarRentalOrder cao = readCarRentalOrder();
+            if (cao == null) {
+                break;
+            }
+
+            AnswerReserved ansRent = checkReserved(cao);
+            if (!ansRent.isSuccess()) {
+                break;
+            }
+
+            AnswerCarReserved ansCarRes = checkCarReserved(cao);
+            if (!ansCarRes.isSuccess()) {
+                break;
+            }
+
+            AnswerSufficientFunds ansSuffFun = checkSufficientFunds(cao);
+            if (!ansSuffFun.isSuccess()) {
+                break;
+            }
+
+            AnswerViolations ansViol = checkViolations(cao);
+            if (!ansViol.isSuccess()) {
+                break;
+            }
+
+            sendMail(cao);
+
+        }
     }
 
     private static CarRentalOrder readCarRentalOrder() {
@@ -23,40 +50,33 @@ public class RentalOrderValidator {
 
     private static AnswerReserved checkReserved(CarRentalOrder cao) {
         ReservedValidator rva1 = new ReservedValidator();
-        rva1.hostName = "Host1";
-        rva1.login = "Login1";
-        ReservedValidator rva2 = new ReservedValidator();
-        rva2.hostName = "Host1";
-        rva2.login = "Login1";
-        AnswerReserved ans1 = rva1.checkReserved(cao);
-        AnswerReserved ans2 = rva2.checkReserved(cao);
-
-        return ans1;
+        rva1.setHostName("Host1");
+        rva1.setLogin("Login1");
+        rva1.setPassword("Password1");
+        return rva1.checkReserved(cao);
     }
 
     private static AnswerCarReserved checkCarReserved(CarRentalOrder cao) {
-        System.out.println("AnswerCarReserved is running");
-        return new AnswerCarReserved;
+        CarReservedValidator crv = new CarReservedValidator();
+        return crv.checkCarReserved(cao);
     }
 
     private static AnswerDriversLicense checkDriversLicense(CarRentalOrder cao) {
-        System.out.println("checkDriversLicense is running");
-        return new AnswerDriversLicense();
+        DriversLicenseValidator dlv = new DriversLicenseValidator();
+        return dlv.checkDriversLicense(cao);
     }
 
     private static AnswerSufficientFunds checkSufficientFunds(CarRentalOrder cao) {
-        System.out.println("checkSufficientFunds is running");
-        return new AnswerSufficientFunds();
+        SufficientFundsValidator sfv = new SufficientFundsValidator();
+        return sfv.checkSufficientFunds(cao);
     }
 
     private static AnswerViolations checkViolations(CarRentalOrder cao) {
-        System.out.println("checkViolations is running");
-        return new AnswerViolations();
+        ViolationsValidator vv = new ViolationsValidator();
+        return vv.checkViolations(cao);
     }
 
     private static void sendMail(CarRentalOrder cao) {
-        System.out.println("sendMail is running");
+        new MailSander().sendMail(cao);
     }
 }
-
-

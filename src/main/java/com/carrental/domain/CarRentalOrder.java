@@ -1,6 +1,5 @@
-package com.carrental;
+package com.carrental.domain;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class CarRentalOrder {
@@ -11,6 +10,9 @@ public class CarRentalOrder {
     String age;
     String driversLicense;
     String fundsNumber;
+    String carId;
+    LocalDateTime beginTime;
+    LocalDateTime endTime;
 //    LocalDate dateOfBirth;
 //    String cityOfBirth;
 //    String cityName;
@@ -20,9 +22,7 @@ public class CarRentalOrder {
 //    String apartmentName;
 //    String carModel;
 //    String carVehicle;
-    String carId;
-    LocalDateTime beginTime;
-    LocalDateTime endTime;
+
 
 
 }

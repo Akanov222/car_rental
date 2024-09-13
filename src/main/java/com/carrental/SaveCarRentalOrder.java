@@ -1,5 +1,7 @@
 package com.carrental;
 
+import com.carrental.domain.CarRentalOrder;
+
 import static com.carrental.RentalOrderValidator.checkAll;
 
 public class SaveCarRentalOrder {
